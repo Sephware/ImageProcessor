@@ -3,7 +3,7 @@ import numpy as np
 
 class ImageProcessor():
 
-    def __init__(self, file_name):
+    def __init__(self, file_name=None):
         """
         Constructor for the `ImageProcessor()` class
         
@@ -16,6 +16,7 @@ class ImageProcessor():
             self.current_image = cv.imread(file_name)
             
         self.original_image = self.current_image
+        self.image_shape = self.current_image.shape
 
     def reset(self):
         self.current_image = self.original_image
@@ -27,10 +28,24 @@ class ImageProcessor():
         :param img: Image input
         :param k_size: Description
         """
-        k_size = np.clip(k_size, 1, 20)
         self.current_image = cv.blur(self.current_image, (k_size, k_size))
 
+    def sharpen_image(self, strength):
+        """
+        Docstring for sharpen_image
+        
+        :param self: Description
+        :param value: Description
+        """
+        alpha = strength / 10.0
 
+        kernel = np.array([
+            [0, -alpha, 0],
+            [-alpha, 1 + 4*alpha, -alpha],
+            [0, -alpha, 0],
+        ])
+
+        self.current_image = cv.filter2D(self.current_image, -1, kernel)
     
     def rotateImage(self, degrees: int):
         """
@@ -63,7 +78,7 @@ if __name__ == '__main__':
     cv.namedWindow(window_name)
     
     # Create trackbars for image smoothing, Image transformation, and Color Edititng
-    cv.createTrackbar("Smoothness", window_name, 0, 20, nothing)
+    cv.createTrackbar("Smoothness", window_name, 0, 100, nothing)
     cv.createTrackbar("Rotation", window_name, 0, 360, nothing)
 
     # Display Image in Window
@@ -82,24 +97,24 @@ if __name__ == '__main__':
         smoothness = cv.getTrackbarPos("Smoothness", window_name)
         rotation = cv.getTrackbarPos("Rotation", window_name)
 
-
-        if smoothness > prev_s:
-            p.blurImage(smoothness)
+        s_sum = smoothness - prev_s
+        if s_sum > 0:
+            p.sharpen_image(s_sum)
             prev_s = smoothness
-        elif smoothness < prev_s:
-            # Sharpen Image
-            pass
-        elif smoothness == prev_s:
+        elif s_sum < 0:
+            
+            prev_s = smoothness
+        elif s_sum == 0:
             pass
         
-        sum = rotation - prev_r
-        if sum > 0:
-            p.rotateImage(sum)
+        r_sum = rotation - prev_r
+        if r_sum > 0:
+            p.rotateImage(r_sum)
             prev_r = rotation
-        elif sum < 0:
-            p.rotateImage(sum)
+        elif r_sum < 0:
+            p.rotateImage(r_sum)
             prev_r = rotation
-        elif sum == 0:
+        elif r_sum == 0:
             pass
 
         cv.imshow(window_name, p.current_image)
