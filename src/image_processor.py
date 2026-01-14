@@ -19,16 +19,27 @@ class ImageProcessor():
         self.image_shape = self.current_image.shape
 
     def reset(self):
+        """
+        Resets the current image to its original
+        
+        :param self: Description
+        """
         self.current_image = self.original_image
 
-    def blurImage(self, k_size):
+    def save(self):
+        file = "static/images/new_image.jpg"
+        cv.imwrite(file, self.current_image)
+        return file
+
+
+    def blur_image(self, k_size):
         """
         Docstring for blurImage
         
         :param img: Image input
         :param k_size: Description
         """
-        self.current_image = cv.blur(self.current_image, (k_size, k_size))
+        self.current_image = cv.blur(self.original_image, (k_size, k_size))
 
     def sharpen_image(self, strength):
         """
@@ -45,9 +56,9 @@ class ImageProcessor():
             [0, -alpha, 0],
         ])
 
-        self.current_image = cv.filter2D(self.current_image, -1, kernel)
+        self.current_image = cv.filter2D(self.original_image, -1, kernel)
     
-    def rotateImage(self, degrees: int):
+    def rotate_image(self, degrees: int):
         """
         Docstring for rotateImage
         
@@ -58,10 +69,10 @@ class ImageProcessor():
         
         degrees = np.clip(degrees, 0, 360)
         # Get the height and width of the image
-        rows, cols, _ = self.current_image.shape
+        rows, cols, _ = self.original_image.shape
 
         M = cv.getRotationMatrix2D(((cols-1)/2.0, (rows-1)/2.0), degrees, 1)
-        self.current_image = cv.warpAffine(self.current_image, M, (cols, rows))
+        self.current_image = cv.warpAffine(self.original_image, M, (cols, rows))
         
 
 ### Section to test functions in console with an example image
@@ -78,14 +89,11 @@ if __name__ == '__main__':
     cv.namedWindow(window_name)
     
     # Create trackbars for image smoothing, Image transformation, and Color Edititng
-    cv.createTrackbar("Smoothness", window_name, 0, 100, nothing)
+    cv.createTrackbar("Smoothness", window_name, 50, 100, nothing)
     cv.createTrackbar("Rotation", window_name, 0, 360, nothing)
 
     # Display Image in Window
     cv.imshow(window_name, p.current_image)
-
-    prev_s = 0
-    prev_r = 0
 
     while(1):
         # Program will exit once user press 'esc' key
@@ -93,29 +101,16 @@ if __name__ == '__main__':
         if k == 27:
             break
 
-        # Track current positions of trackbar values
+        # Track smoothness and rotation value
         smoothness = cv.getTrackbarPos("Smoothness", window_name)
         rotation = cv.getTrackbarPos("Rotation", window_name)
 
-        s_sum = smoothness - prev_s
-        if s_sum > 0:
-            p.sharpen_image(s_sum)
-            prev_s = smoothness
-        elif s_sum < 0:
-            
-            prev_s = smoothness
-        elif s_sum == 0:
-            pass
-        
-        r_sum = rotation - prev_r
-        if r_sum > 0:
-            p.rotateImage(r_sum)
-            prev_r = rotation
-        elif r_sum < 0:
-            p.rotateImage(r_sum)
-            prev_r = rotation
-        elif r_sum == 0:
-            pass
+        if smoothness > 50:
+            p.blur_image(smoothness - 50)
+        elif smoothness < 50:
+            p.sharpen_image(50 - smoothness)
+
+        p.rotate_image(rotation)
 
         cv.imshow(window_name, p.current_image)
     
