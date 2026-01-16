@@ -18,7 +18,7 @@ class MainWindow(qt.QMainWindow):
 
         # Create Window Layout
         self.widget = qt.QWidget()
-        self.layout = qt.QGridLayout()
+        self.layout = qt.QVBoxLayout()
 
         # Image file input
         self.image_file = ''
@@ -28,14 +28,15 @@ class MainWindow(qt.QMainWindow):
 
         self.layout.addWidget(input_button)
         self.widget.setLayout(self.layout)
-        self.setCentralWidget(self.widget)
+        self.setCentralWidget(input_button)
 
 
     def reset_button_action(self):
         if self.debug:
             print("Reset button clicked.")
         self.processor.reset()
-        self.update_image()
+        self.smoothness_slider.setValue(0)
+        self.rotation_slider.setValue(0)
 
     
     def smoothness_value(self, s):
@@ -54,27 +55,36 @@ class MainWindow(qt.QMainWindow):
     def add_all_widgets(self):
 
         # Smoothing/Sharpening Slider
-        smoothness_slider = qt.QSlider(Qt.Horizontal)
-        smoothness_slider.setRange(-50, 50)
-        smoothness_slider.valueChanged.connect(self.smoothness_value)
+        self.smoothness_slider = qt.QSlider(Qt.Horizontal)
+        self.smoothness_slider.setRange(-50, 50)
+        self.smoothness_slider.valueChanged.connect(self.smoothness_value)
 
         # Rotation Slider
-        rotation_slider = qt.QSlider(Qt.Horizontal)
-        rotation_slider.setRange(0, 360)
-        rotation_slider.valueChanged.connect(self.rotation_value)
+        self.rotation_slider = qt.QSlider(Qt.Horizontal)
+        self.rotation_slider.setRange(0, 360)
+        self.rotation_slider.valueChanged.connect(self.rotation_value)
 
         # Reset Button
-        reset_button = qt.QPushButton("Reset to Default")
-        reset_button.clicked.connect(self.reset_button_action)
+        self.reset_button = qt.QPushButton("Reset to Default")
+        self.reset_button.clicked.connect(self.reset_button_action)
 
         # Image Label
-        self.image_label.setPixmap(QPixmap(self.image_file))
+        image = QPixmap(self.image_file)
+        image.scaled(
+            800, 
+            600, 
+            Qt.AspectRatioMode.KeepAspectRatio, 
+            Qt.TransformationMode.SmoothTransformation
+            )
+        self.image_label.setPixmap(image)
+        self.image_label.setSizePolicy(qt.QSizePolicy.Ignored, qt.QSizePolicy.Ignored)
+        self.image_label.setScaledContents(True)
 
         # Addwidgets to Layout
         widgets = [
-            smoothness_slider,
-            rotation_slider,
-            reset_button,
+            self.smoothness_slider,
+            self.rotation_slider,
+            self.reset_button,
             self.image_label,
         ]
 
@@ -98,8 +108,9 @@ class MainWindow(qt.QMainWindow):
             self.widget.setLayout(self.layout)
             self.setCentralWidget(self.widget)
 
-
     def update_image(self):
         new_img_file = self.processor.save()
-        self.image_label.setPixmap(QPixmap(new_img_file))
+        image = QPixmap(new_img_file)
+        image.scaled(50, 60, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        self.image_label.setPixmap(image)
 
