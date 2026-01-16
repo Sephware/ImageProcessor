@@ -30,7 +30,6 @@ class MainWindow(qt.QMainWindow):
         self.widget.setLayout(self.layout)
         self.setCentralWidget(input_button)
 
-
     def reset_button_action(self):
         if self.debug:
             print("Reset button clicked.")
@@ -40,20 +39,15 @@ class MainWindow(qt.QMainWindow):
 
     
     def smoothness_value(self, s):
-        if s < 0:
-            self.processor.sharpen_image(abs(s))
-        elif s > 0:
-            self.processor.blur_image(s)
+        self.processor.set_smoothness(s)
         self.update_image()
 
-    
     def rotation_value(self, r):
-        self.processor.rotate_image(r)
+        self.processor.set_rotation(r)
         self.update_image()
 
 
     def add_all_widgets(self):
-
         # Smoothing/Sharpening Slider
         self.smoothness_slider = qt.QSlider(Qt.Horizontal)
         self.smoothness_slider.setRange(-50, 50)
@@ -109,6 +103,7 @@ class MainWindow(qt.QMainWindow):
             self.setCentralWidget(self.widget)
 
     def update_image(self):
+        self.processor.update()
         new_img_file = self.processor.save()
         image = QPixmap(new_img_file)
         image.scaled(50, 60, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
