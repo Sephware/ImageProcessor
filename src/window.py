@@ -46,6 +46,9 @@ class MainWindow(qt.QMainWindow):
         self.processor.set_rotation(r)
         self.update_image()
 
+    def filter_value(self, f):
+        self.processor.set_filter(f)
+        self.update_image()
 
     def add_all_widgets(self):
         # Smoothing/Sharpening Slider
@@ -57,6 +60,11 @@ class MainWindow(qt.QMainWindow):
         self.rotation_slider = qt.QSlider(Qt.Horizontal)
         self.rotation_slider.setRange(0, 360)
         self.rotation_slider.valueChanged.connect(self.rotation_value)
+
+        # Filter Box
+        self.filter_box = qt.QComboBox()
+        self.filter_box.addItems(["Default", "Greyscale"])
+        self.filter_box.currentIndexChanged.connect(self.filter_value)
 
         # Reset Button
         self.reset_button = qt.QPushButton("Reset to Default")
@@ -78,6 +86,7 @@ class MainWindow(qt.QMainWindow):
         widgets = [
             self.smoothness_slider,
             self.rotation_slider,
+            self.filter_box,
             self.reset_button,
             self.image_label,
         ]

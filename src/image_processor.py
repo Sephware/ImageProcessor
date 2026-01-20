@@ -7,15 +7,15 @@ class ImageProcessor():
         """
         Constructor for the `ImageProcessor()` class
         
-        :param self: Description
         :param file_name: Path or input of the image file
         """
+        self.file = file_name
         if file_name is None:
             self.current_image = np.zeros((300, 521, 3), np.uint8)
         else:
             self.current_image = cv.imread(file_name)
-            
-        self.original_image = self.current_image
+        
+        self.original_image = self.current_image 
         self.image_shape = self.current_image.shape
         self.settings = {
             "smoothness": 0,
@@ -23,11 +23,12 @@ class ImageProcessor():
             "filter": 0, # 0 is normal, 1 is greyscale, 2-N will be a colored filter
         }
 
-    def set_smoothness(self, strength):
+    def set_smoothness(self, strength: int):
         """
         Sets the smoothness of the image.
-        
+
         :param strength: Value of the smoothness. Positive values will blur the image, while negative values sharpen the image.
+        :type strength: int
         """
         self.settings["smoothness"] = strength
     
@@ -40,10 +41,31 @@ class ImageProcessor():
         """
         self.settings["rotation"] = degrees
 
+    def set_filter(self, filter: int):
+        """
+        Docstring for set_filter
+
+        :param filter: Value of a selected filter. 0 is default, 1 is greyscale, 2 is warmed, 3 is cooled
+        :type filter: int
+        """
+        self.settings["filter"] = filter
+
+
     def update(self):
         """
         Updates the image with the changed settings
         """
+        self.current_image = self.original_image
+
+        # Filter
+        x = self.settings["filter"]
+        if x == 0:
+            pass
+        elif x == 1:
+            self.current_image = cv.imread(self.file, cv.IMREAD_GRAYSCALE)
+        elif x == 2:
+            pass
+
         # Smoothness
         x = self.settings["smoothness"]
         if x > 0: # Will blur the image
@@ -63,6 +85,8 @@ class ImageProcessor():
 
         M = cv.getRotationMatrix2D(((cols-1)/2.0, (rows-1)/2.0), x, 1)
         self.current_image = cv.warpAffine(self.current_image, M, (cols, rows))
+
+
 
     def reset(self):
         """
