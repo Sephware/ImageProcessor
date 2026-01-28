@@ -6,5 +6,6 @@ app.spec
 
 .*
 static/.*
+static/images/
 static/code/
 TODO.txt
