@@ -16,7 +16,7 @@ class ImageProcessor():
             self.current_image = cv.imread(file_name)
         
         self.original_image = self.current_image 
-        self.image_shape = self.current_image.shape
+        self.image_shape = self.original_image.shape
         self.settings = {
             "smoothness": 0,
             "rotation": 0,
@@ -82,11 +82,8 @@ class ImageProcessor():
         # Rotation
         x = self.settings["rotation"]
         rows, cols, _ = self.original_image.shape
-
         M = cv.getRotationMatrix2D(((cols-1)/2.0, (rows-1)/2.0), x, 1)
         self.current_image = cv.warpAffine(self.current_image, M, (cols, rows))
-
-
 
     def reset(self):
         """
@@ -104,3 +101,12 @@ class ImageProcessor():
         file = "static/images/new_image.jpg"
         cv.imwrite(file, self.current_image)
         return file
+    
+
+if __name__ == "__main__":
+    p = ImageProcessor("static/icons/photo-gallery.png")
+    matrix = np.array(p)
+    print(matrix.shape)
+    print(matrix)
+
+
