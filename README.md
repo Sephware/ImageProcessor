@@ -7,4 +7,4 @@ This app enables you to edit images by using filters and transformations. This p
 - Image Transformations such as rotation, cropping, and scaling.
 - Save new images in multiple formats (*.png, *.jpg, *.webp, *tiff, etc.)
 
-*Still in Development, but code can be viewable*
+*Still in Development, but code is viewable*
