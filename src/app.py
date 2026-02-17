@@ -3,7 +3,7 @@ from window import MainWindow
 
 app = QApplication([])
 
-window = MainWindow(False)
+window = MainWindow()
 window.showMaximized()
 
 app.exec()
