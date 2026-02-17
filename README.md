@@ -1,4 +1,4 @@
-# Image Editing Application
+# Image Editing & Processing Application
 
 This app enables you to edit images by using filters and transformations. This project is primaraly Python along with OpenCV for image processing, and PyQt5 as the desktop framekwork.
 ## Features for Images
