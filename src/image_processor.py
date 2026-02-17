@@ -18,25 +18,25 @@ class ImageProcessor():
         self.original_image = self.current_image 
         self.image_shape = self.original_image.shape
         self.settings = {
-            "smoothness": 0,
+            "clarity": 0,
             "rotation": 0,
             "filter": 0, # 0 is normal, 1 is greyscale, 2-N will be a colored filter
         }
 
-    def set_smoothness(self, strength: int):
+    def set_clarity(self, strength: int):
         """
-        Sets the smoothness of the image.
+        Sets the clarity of the image.
 
-        :param strength: Value of the smoothness. Positive values will blur the image, while negative values sharpen the image.
+        :param strength: Positive values will blur the image, while negative values sharpen the image.
         :type strength: int
         """
-        self.settings["smoothness"] = strength
+        self.settings["clarity"] = strength
     
     def set_rotation(self, degrees: int):
         """
         Rotates the Image
 
-        :param degrees: Value of the image's rotation form 0 to 360 degrees.
+        :param degrees: Value of the image's rotation from 0 to 360 degrees.
         :type degrees: int
         """
         self.settings["rotation"] = degrees
@@ -66,8 +66,8 @@ class ImageProcessor():
         elif x == 2:
             pass
 
-        # Smoothness
-        x = self.settings["smoothness"]
+        # Clarity
+        x = self.settings["clarity"]
         if x > 0: # Will blur the image
             self.current_image = cv.blur(self.current_image, (x, x))
         elif x < 0: # Will sharpen the image
@@ -102,6 +102,11 @@ class ImageProcessor():
         cv.imwrite(file, self.current_image)
         return file
     
+    def get_image(self):
+        """
+        Returns the current image as a numpy array
+        """
+        return self.current_image
 
 if __name__ == "__main__":
     p = ImageProcessor("static/icons/photo-gallery.png")
