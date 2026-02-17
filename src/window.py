@@ -5,7 +5,7 @@ import cv2 as cv
 from image_processor import ImageProcessor
 
 class MainWindow(qt.QMainWindow):
-    def __init__(self, debug=False):
+    def __init__(self):
         """
         Initalizer for MainWindow()
         
@@ -13,7 +13,6 @@ class MainWindow(qt.QMainWindow):
         :param is_debug: Option to print any action made on MainWindow to the console.
         """
         super().__init__()
-        self.debug = debug
         self.processor = ImageProcessor()
         self.setWindowTitle("Image Processor")
 
