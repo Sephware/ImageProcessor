@@ -92,15 +92,7 @@ class ImageProcessor():
         self.current_image = self.original_image
 
         for n in self.settings:
-            n = 0
-
-    def save(self):
-        """
-        Saves the current image with the settings
-        """
-        file = "static/images/new_image.jpg"
-        cv.imwrite(file, self.current_image)
-        return file
+            n = 0 
     
     def get_image(self):
         """

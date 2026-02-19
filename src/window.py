@@ -138,7 +138,6 @@ class MainWindow(qt.QMainWindow):
         q_img = QImage(rbg_image.data, width, height, bytes_per_line, QImage.Format_RGB888)
         return QPixmap.fromImage(q_img)
     
-    # TODO: Change how program updates and saves image without using "new_image.jpg"
     def update_image(self):
         """
         Updates the image displayed in the interface with the current settings in ImageProcessor.
