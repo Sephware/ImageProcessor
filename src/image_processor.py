@@ -2,11 +2,13 @@ import cv2 as cv
 import numpy as np
 
 class ImageProcessor():
+    """
+    ImageProcessor is a class that handles image processing operations.
+    """
 
     def __init__(self, file_name=None):
         """
-        Constructor for the `ImageProcessor()` class
-        
+        Initializer for ImageProcessor()
         :param file_name: Path or input of the image file
         """
         self.file = file_name
@@ -43,7 +45,7 @@ class ImageProcessor():
 
     def set_filter(self, filter: int):
         """
-        Docstring for set_filter
+        Sets the filter of the image.
 
         :param filter: Value of a selected filter. 0 is default, 1 is greyscale, 2 is warmed, 3 is cooled
         :type filter: int
@@ -53,7 +55,7 @@ class ImageProcessor():
 
     def update(self):
         """
-        Updates the image with the changed settings
+        Updates the current image based on the settings in self.settings.
         """
         self.current_image = self.original_image
 
@@ -87,12 +89,11 @@ class ImageProcessor():
 
     def reset(self):
         """
-        Resets the current image to its original
+        Resets the settings and the current image to its original.
         """
         self.current_image = self.original_image
-
-        for n in self.settings:
-            n = 0 
+        for key in self.settings:
+            self.settings[key] = 0
     
     def get_image(self):
         """

@@ -5,12 +5,13 @@ import cv2 as cv
 from image_processor import ImageProcessor
 
 class MainWindow(qt.QMainWindow):
+    """
+    MainWindow is the main interface for the image editing application. 
+    It contains all the widgets and handles user interactions.
+    """
     def __init__(self):
         """
         Initalizer for MainWindow()
-        
-        :param self: Description
-        :param is_debug: Option to print any action made on MainWindow to the console.
         """
         super().__init__()
         self.processor = ImageProcessor()
@@ -100,7 +101,7 @@ class MainWindow(qt.QMainWindow):
         self.image_label.setSizePolicy(qt.QSizePolicy.Ignored, qt.QSizePolicy.Ignored)
         self.image_label.setScaledContents(True)
 
-        # Addwidgets to Layout
+        # Add widgets to Layout
         widgets = [
             self.clarity_slider,
             self.rotation_slider,
@@ -108,11 +109,14 @@ class MainWindow(qt.QMainWindow):
             self.reset_button,
             self.image_label,
         ]
-
         for w in widgets:
             self.layout.addWidget(w)
 
     def input_button_action(self):
+        """
+        Clicking this button will open a file dialog for the user to select an image file.
+        Once a file is selected, add_all_widgets() is called to add the rest of the widgets to the interface.
+        """
         input = qt.QFileDialog(self)
         input.setWindowTitle("Select Image File")
         input.setFileMode(qt.QFileDialog.FileMode.ExistingFile)
@@ -133,7 +137,7 @@ class MainWindow(qt.QMainWindow):
         A helper function for MainWindow.update_image() that converts a numpy array to a QImage for display.
         
         :param cv_img: A numpy array representing the image to be converted.
-        :return: A QImage object that can be displayed in the PyQt5 interface.
+        :return: A QImage object that can be displayed in the PyQt interface.
         """
         rbg_image = cv.cvtColor(cv_img, cv.COLOR_BGR2RGB)
         height, width, channel = rbg_image.shape
@@ -143,7 +147,7 @@ class MainWindow(qt.QMainWindow):
     
     def update_image(self):
         """
-        Updates the image displayed in the interface with the current settings in ImageProcessor.
+        Updates the image displayed in the interface with the current settings.
         """
         self.processor.update()
         cv_image = self.processor.get_image()
