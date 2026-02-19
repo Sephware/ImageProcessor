@@ -35,29 +35,28 @@ class MainWindow(qt.QMainWindow):
 
     def reset_button_action(self):
         """
-        Action for reset_button. Calls ImageProcessor.reset() and resets any changes to the image.
+        Clicking this button will reset all the image settings to default.
         """
         self.processor.reset()
-        self.smoothness_slider.setValue(0)
+        self.clarity_slider.setValue(0)
         self.rotation_slider.setValue(0)
     
-    def smoothness_value(self, s):
+    def clarity_value(self, s):
         """
-        Updates the clarity value everytime the slider value changes.
+        Changing the slider value will update the image's clarity.
         """
         self.processor.set_clarity(s)
         self.update_image()
 
     def rotation_value(self, r):
         """
-        Updates the rotation value everytime the slider value changes.
+        Changing the slider value will update the image's rotation.
         """
         self.processor.set_rotation(r)
         self.update_image()
 
     def filter_value(self, f):
         """
-        Docstring for filter_value
         Updates the filter box each time a different value in the dropbox is selected.
         """
         self.processor.set_filter(f)
@@ -66,10 +65,14 @@ class MainWindow(qt.QMainWindow):
 ### Handling Widgets ###
 
     def add_all_widgets(self):
+        """
+        Adds all the required widgets to the layout.
+        This function is called once the user selects an image file.
+        """
         # Smoothing/Sharpening Slider
-        self.smoothness_slider = qt.QSlider(Qt.Horizontal)
-        self.smoothness_slider.setRange(-50, 50)
-        self.smoothness_slider.valueChanged.connect(self.smoothness_value)
+        self.clarity_slider = qt.QSlider(Qt.Horizontal)
+        self.clarity_slider.setRange(-50, 50)
+        self.clarity_slider.valueChanged.connect(self.clarity_value)
 
         # Rotation Slider
         self.rotation_slider = qt.QSlider(Qt.Horizontal)
@@ -99,7 +102,7 @@ class MainWindow(qt.QMainWindow):
 
         # Addwidgets to Layout
         widgets = [
-            self.smoothness_slider,
+            self.clarity_slider,
             self.rotation_slider,
             self.filter_box,
             self.reset_button,
